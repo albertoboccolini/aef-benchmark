@@ -1,0 +1,14 @@
+[[theme.fontFaces]]
+family="Nunito"
+url="https://fonts.gstatic.com/s/nunito/v31/XRXX3I6Li01BKofIMNaDRs7nczIH.woff2"
+style="italic"
+weight="200 1000"
+
+[[theme.fontFaces]]
+family="Nunito"
+url="https://fonts.gstatic.com/s/nunito/v31/XRXV3I6Li01BKofINeaBTMnFcQ.woff2"
+style="normal"
+weight="200 1000"
+
+[theme]
+font="Nunito, sans-serif"
