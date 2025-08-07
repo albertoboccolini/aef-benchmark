@@ -9,10 +9,6 @@ from services.csv_manager import save_evaluation_results, generate_evaluation_ro
 from services.evaluation_manager import event_is_matching
 from services.locationiq_apis_manager import get_place_suggestions
 from services.logging_manager import log_error, log_info
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def process_ai_events(events):

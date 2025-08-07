@@ -6,6 +6,9 @@ from openai import OpenAI
 from google import genai
 
 from services.logging_manager import log_info
+from dotenv import load_dotenv
+
+load_dotenv()
 
 open_ai_client = OpenAI(
     api_key=os.environ["OPENAI_API_KEY"],

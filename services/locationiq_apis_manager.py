@@ -1,6 +1,9 @@
 import os
 import requests
 
+from dotenv import load_dotenv
+
+load_dotenv()
 LOCATIONIQ_API_KEY = os.environ.get("LOCATIONIQ_API_KEY")
 
 
