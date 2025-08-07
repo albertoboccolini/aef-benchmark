@@ -6,7 +6,9 @@ from urllib.parse import urlencode
 import logging
 
 from services.logging_manager import log_info
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def fetch_events(latitude, longitude, start_date, end_date, distance_km):
     base_url = "https://api.predicthq.com/v1/events/"

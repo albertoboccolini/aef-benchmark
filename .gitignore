@@ -1,4 +1,6 @@
 datasets
 evaluations
+.venv
 .idea
 .env
+__pycache__/
