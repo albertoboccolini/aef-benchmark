@@ -8,6 +8,9 @@ LOCATIONIQ_API_KEY = os.environ.get("LOCATIONIQ_API_KEY")
 
 
 def get_place_suggestions(query: str):
+    # Let LocationIQ suggest up to 3 places, since it is less precise than
+    # the Google Places API. This increases the chance of finding the correct
+    # location if the first suggestion is inaccurate.
     url = "https://api.locationiq.com/v1/autocomplete"
     params = {
         "key": LOCATIONIQ_API_KEY,

@@ -47,7 +47,7 @@ of the events, ensuring they are upcoming and relevant to potential visitors.
 
 
 def get_gpt_response(prompt_text: str, search_model: str) -> List[AIEvent]:
-    log_info("Finding events using GPT...")
+    log_info(f"Finding events using {search_model}...")
     response = open_ai_client.chat.completions.parse(
         model=search_model,
         messages=[
@@ -61,7 +61,7 @@ def get_gpt_response(prompt_text: str, search_model: str) -> List[AIEvent]:
 
 
 def get_perplexity_response(prompt_text: str, search_model: str) -> List[AIEvent]:
-    log_info("Finding events using Perplexity...")
+    log_info(f"Finding events using {search_model}...")
     response = perplexity_ai_client.chat.completions.parse(
         model=search_model,
         messages=[

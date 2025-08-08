@@ -114,49 +114,51 @@ if __name__ == "__main__":
     prompt = f"Find events near '{args.address}' from {args.start} to {args.end} within {args.distance} km."
     log_info(prompt)
 
-    perplexity_sonar_pro_matching_events = []
-    perplexity_sonar_pro_non_matching_events = []
-    perplexity_sonar_pro_model = "sonar-pro"
-    gpt_4o_matching_events = []
-    gpt_4o_non_matching_events = []
-    gpt_4o_model = "gpt-4o-search-preview"
-    gpt_4o_mini_matching_events = []
-    gpt_4o_mini_non_matching_events = []
-    gpt_4o_mini_model = "gpt-4o-mini-search-preview"
+    gpt_models_to_be_tested = [
+        "gpt-4o-mini-search-preview",
+        "gpt-4o-search-preview"
+    ]
+    gpt_rows = []
 
-    while len(perplexity_sonar_pro_matching_events) == 0:
-        try:
-            perplexity_sonar_pro_events = get_perplexity_response(prompt, perplexity_sonar_pro_model)
-            perplexity_sonar_pro_matching_events, perplexity_sonar_pro_non_matching_events = evaluate(
-                perplexity_sonar_pro_events)
-        except Exception as e:
-            log_error(str(e))
-            continue
+    perplexity_models_to_be_tested = [
+        "sonar",
+        "sonar-pro"
+    ]
+    perplexity_rows = []
 
-    while len(gpt_4o_matching_events) == 0:
-        try:
-            gpt_4o_events = get_gpt_response(prompt, gpt_4o_model)
-            gpt_4o_matching_events, gpt_4o_non_matching_events = evaluate(gpt_4o_events)
-        except Exception as e:
-            log_error(str(e))
-            continue
+    for gpt_model in gpt_models_to_be_tested:
+        gpt_matching_events = []
+        gpt_non_matching_events = []
+        while len(gpt_matching_events) == 0:
+            try:
+                gpt_events = get_gpt_response(prompt, gpt_model)
+                gpt_matching_events, gpt_non_matching_events = evaluate(gpt_events)
+            except Exception as e:
+                log_error(str(e))
+                continue
 
-    while len(gpt_4o_mini_matching_events) == 0:
-        try:
-            gpt_4o_mini_events = get_gpt_response(prompt, gpt_4o_mini_model)
-            gpt_4o_mini_matching_events, gpt_4o_mini_non_matching_events = evaluate(gpt_4o_mini_events)
-        except Exception as e:
-            log_error(str(e))
-            continue
+        gpt_results = generate_evaluation_row(gpt_model, gpt_matching_events, gpt_non_matching_events)
+        gpt_rows.append(gpt_results)
 
-    perplexity_sonar_pro_results = generate_evaluation_row(perplexity_sonar_pro_model,
-                                                           perplexity_sonar_pro_matching_events,
-                                                           perplexity_sonar_pro_non_matching_events)
-    gpt_4o_results = generate_evaluation_row(gpt_4o_model, gpt_4o_matching_events, gpt_4o_non_matching_events)
-    gpt_4o_mini_results = generate_evaluation_row(gpt_4o_mini_model, gpt_4o_mini_matching_events, gpt_4o_mini_non_matching_events)
+    for perplexity_model in perplexity_models_to_be_tested:
+        perplexity_matching_events = []
+        perplexity_non_matching_events = []
+        while len(perplexity_matching_events) == 0:
+            try:
+                perplexity_events = get_perplexity_response(prompt, perplexity_model)
+                perplexity_matching_events, perplexity_non_matching_events = evaluate(gpt_events)
+            except Exception as e:
+                log_error(str(e))
+                continue
+
+        perplexity_results = generate_evaluation_row(perplexity_model, perplexity_matching_events,
+                                                     perplexity_non_matching_events)
+        perplexity_rows.append(perplexity_results)
+
+    rows = gpt_rows + perplexity_rows
 
     save_evaluation_results(
-        [perplexity_sonar_pro_results, gpt_4o_results, gpt_4o_mini_results],
+        rows,
         args.address,
         args.start,
         args.end,
