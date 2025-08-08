@@ -40,13 +40,14 @@ def style_table(df):
     return styled_df
 
 
-for csv_file in csv_files:
-    st.text(csv_file.name)
+if __name__ == "__main__":
+    for csv_file in csv_files:
+        st.text(csv_file.name)
 
-    try:
-        df = pd.read_csv(csv_file)
-        if "Matching events" in df.columns:
-            df = df.sort_values("Matching events", ascending=False)
-        st.dataframe(style_table(df), use_container_width=True, hide_index=True)
-    except Exception as e:
-        st.error(f"Errore nel caricare il file {csv_file.name}: {str(e)}")
+        try:
+            df = pd.read_csv(csv_file)
+            if "Matching events" in df.columns:
+                df = df.sort_values("Matching events", ascending=False)
+            st.dataframe(style_table(df), use_container_width=True, hide_index=True)
+        except Exception as e:
+            st.error(f"Error during CSV loading {csv_file.name}: {str(e)}")
