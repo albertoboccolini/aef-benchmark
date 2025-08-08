@@ -12,3 +12,5 @@ weight="200 1000"
 
 [theme]
 font="Nunito, sans-serif"
+backgroundColor="#F8FAFC"
+textColor="#0E1629"
