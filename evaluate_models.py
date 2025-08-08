@@ -114,48 +114,28 @@ if __name__ == "__main__":
     prompt = f"Find events near '{args.address}' from {args.start} to {args.end} within {args.distance} km."
     log_info(prompt)
 
-    gpt_models_to_be_tested = [
+    models_to_be_tested = [
+        "sonar",
+        "sonar-pro",
         "gpt-4o-mini-search-preview",
         "gpt-4o-search-preview"
     ]
-    gpt_rows = []
+    rows = []
 
-    perplexity_models_to_be_tested = [
-        "sonar",
-        "sonar-pro"
-    ]
-    perplexity_rows = []
-
-    for gpt_model in gpt_models_to_be_tested:
-        gpt_matching_events = []
-        gpt_non_matching_events = []
-        while len(gpt_matching_events) == 0:
+    for model in models_to_be_tested:
+        model_matching_events = []
+        model_non_matching_events = []
+        while len(model_matching_events) == 0:
             try:
-                gpt_events = get_gpt_response(prompt, gpt_model)
-                gpt_matching_events, gpt_non_matching_events = evaluate(gpt_events)
+                model_events = get_perplexity_response(prompt, model) if "sonar" in model else get_gpt_response(prompt,
+                                                                                                                model)
+                model_matching_events, model_non_matching_events = evaluate(model_events)
             except Exception as e:
                 log_error(str(e))
                 continue
 
-        gpt_results = generate_evaluation_row(gpt_model, gpt_matching_events, gpt_non_matching_events)
-        gpt_rows.append(gpt_results)
-
-    for perplexity_model in perplexity_models_to_be_tested:
-        perplexity_matching_events = []
-        perplexity_non_matching_events = []
-        while len(perplexity_matching_events) == 0:
-            try:
-                perplexity_events = get_perplexity_response(prompt, perplexity_model)
-                perplexity_matching_events, perplexity_non_matching_events = evaluate(gpt_events)
-            except Exception as e:
-                log_error(str(e))
-                continue
-
-        perplexity_results = generate_evaluation_row(perplexity_model, perplexity_matching_events,
-                                                     perplexity_non_matching_events)
-        perplexity_rows.append(perplexity_results)
-
-    rows = gpt_rows + perplexity_rows
+        evaluation_results = generate_evaluation_row(model, model_matching_events, model_non_matching_events)
+        rows.append(evaluation_results)
 
     save_evaluation_results(
         rows,
