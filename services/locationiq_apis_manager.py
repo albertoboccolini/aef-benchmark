@@ -17,7 +17,7 @@ def get_place_suggestions(query: str):
         "q": query,
         "format": "json",
         "limit": 3,
-        "countrycodes": "it"
+        "countrycodes": "it",
     }
 
     response = requests.get(url, params=params)
@@ -29,12 +29,14 @@ def get_place_suggestions(query: str):
 
     suggestions = []
     for item in data:
-        suggestions.append({
-            "name": item.get("display_name", ""),
-            "address": item.get("address", {}),
-            "place_id": item.get("place_id"),
-            "lat": item.get("lat"),
-            "lng": item.get("lon")
-        })
+        suggestions.append(
+            {
+                "name": item.get("display_name", ""),
+                "address": item.get("address", {}),
+                "place_id": item.get("place_id"),
+                "lat": item.get("lat"),
+                "lng": item.get("lon"),
+            }
+        )
 
     return suggestions

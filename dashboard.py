@@ -27,16 +27,18 @@ def get_model_color(row):
 
 
 def style_table(df):
-    styled_df = df.style.map(
-        lambda _: "", subset=pd.IndexSlice[:, :]
-    )
+    styled_df = df.style.map(lambda _: "", subset=pd.IndexSlice[:, :])
     styled_df = styled_df.apply(
-        lambda row: [get_model_color(row) if col == "Model" else "" for col in df.columns],
-        axis=1
-    ).format({
-        "AVG Matching Score (distance > 2km)": "{:.3f}",
-        "AVG Non-Matching Score": "{:.3f}",
-    })
+        lambda row: [
+            get_model_color(row) if col == "Model" else "" for col in df.columns
+        ],
+        axis=1,
+    ).format(
+        {
+            "AVG Matching Score (distance > 2km)": "{:.3f}",
+            "AVG Non-Matching Score": "{:.3f}",
+        }
+    )
     return styled_df
 
 

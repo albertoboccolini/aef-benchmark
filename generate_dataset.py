@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def fetch_events(latitude, longitude, start_date, end_date, distance_km):
     base_url = "https://api.predicthq.com/v1/events/"
     params = {
@@ -17,11 +18,11 @@ def fetch_events(latitude, longitude, start_date, end_date, distance_km):
         "active.gte": start_date,
         "active.lte": end_date,
         "active.tz": "Europe/Rome",
-        "limit": 50
+        "limit": 50,
     }
     headers = {
         "Authorization": f"Bearer {os.environ['PREDICT_HQ_TOKEN']}",
-        "Accept": "application/json"
+        "Accept": "application/json",
     }
 
     all_results = []
@@ -43,9 +44,12 @@ def fetch_events(latitude, longitude, start_date, end_date, distance_km):
 
 def extract_event_data(event):
     hospitality_impact = next(
-        (pattern.get("impacts", []) for pattern in event.get("impact_patterns", []) if
-         pattern.get("vertical") == "hospitality"),
-        []
+        (
+            pattern.get("impacts", [])
+            for pattern in event.get("impact_patterns", [])
+            if pattern.get("vertical") == "hospitality"
+        ),
+        [],
     )
     return {
         "id": event.get("id"),
@@ -59,7 +63,7 @@ def extract_event_data(event):
         "predicted_attendance": event.get("phq_attendance"),
         "impact_patterns_hospitality": hospitality_impact,
         "predicted_event_spend": event.get("predicted_event_spend"),
-        "local_rank": event.get("local_rank")
+        "local_rank": event.get("local_rank"),
     }
 
 
@@ -70,7 +74,9 @@ def generate_dataset():
     parser.add_argument("--start", required=True, help="Data inizio (YYYY-MM-DD)")
     parser.add_argument("--end", required=True, help="Data fine (YYYY-MM-DD)")
     parser.add_argument("--distance", required=True, type=int, help="Distanza in km")
-    parser.add_argument("--min_attendance", type=int, default=1000, help="Attendance minima")
+    parser.add_argument(
+        "--min_attendance", type=int, default=1000, help="Attendance minima"
+    )
     parser.add_argument("--min_rank", type=int, default=60, help="Rank minimo")
     args = parser.parse_args()
 
@@ -89,7 +95,6 @@ def generate_dataset():
 
 if __name__ == "__main__":
     logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
     )
     generate_dataset()

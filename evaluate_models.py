@@ -32,18 +32,28 @@ def process_ai_events(events):
         # to make it sure we not exclude some
         # places during the evaluation
         for suggestion in suggestions:
-            lat_long = (suggestion['lat'], suggestion['lng'])
-            start_naive = event.startDate.replace(tzinfo=None) if event.startDate.tzinfo else event.startDate
-            end_naive = event.endDate.replace(tzinfo=None) if event.endDate.tzinfo else event.endDate
+            lat_long = (suggestion["lat"], suggestion["lng"])
+            start_naive = (
+                event.startDate.replace(tzinfo=None)
+                if event.startDate.tzinfo
+                else event.startDate
+            )
+            end_naive = (
+                event.endDate.replace(tzinfo=None)
+                if event.endDate.tzinfo
+                else event.endDate
+            )
 
-            processed.append({
-                'name': event.name,
-                'place': event.place,
-                'lat': lat_long[0],
-                'lon': lat_long[1],
-                'start': start_naive,
-                'end': end_naive
-            })
+            processed.append(
+                {
+                    "name": event.name,
+                    "place": event.place,
+                    "lat": lat_long[0],
+                    "lon": lat_long[1],
+                    "start": start_naive,
+                    "end": end_naive,
+                }
+            )
 
     return processed
 
@@ -54,7 +64,9 @@ def evaluate(ai_events):
     non_matching_events = []
     event_match_info = {}
 
-    log_info(f"Evaluating {len(df)} dataset rows against {len(suggestions_for_ai_events)} suggestions")
+    log_info(
+        f"Evaluating {len(df)} dataset rows against {len(suggestions_for_ai_events)} suggestions"
+    )
 
     for idx, row in df.iterrows():
         for suggestion in suggestions_for_ai_events:
@@ -67,7 +79,7 @@ def evaluate(ai_events):
                 event_match_info[event_key] = {
                     "matched": False,
                     "best_score": 0,
-                    "best_suggestion": suggestion.copy()
+                    "best_suggestion": suggestion.copy(),
                 }
 
             has_found_event, score = event_is_matching(row, suggestion)
@@ -98,12 +110,13 @@ def evaluate(ai_events):
 
 if __name__ == "__main__":
     logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
     )
 
     parser = argparse.ArgumentParser(description="Evaluate models.")
-    parser.add_argument("--path", required=True, type=str, help="Path to PredictHQ dataset")
+    parser.add_argument(
+        "--path", required=True, type=str, help="Path to PredictHQ dataset"
+    )
     parser.add_argument("--address", required=True, type=str, help="Place address")
     parser.add_argument("--start", required=True, help="Start Date (YYYY-MM-DD)")
     parser.add_argument("--end", required=True, help="End Date (YYYY-MM-DD)")
@@ -118,7 +131,7 @@ if __name__ == "__main__":
         "sonar",
         "sonar-pro",
         "gpt-4o-mini-search-preview",
-        "gpt-4o-search-preview"
+        "gpt-4o-search-preview",
     ]
     rows = []
 
@@ -137,16 +150,20 @@ if __name__ == "__main__":
                     if "sonar" in model
                     else get_gpt_response(prompt, model)
                 )
-                model_matching_events, model_non_matching_events = evaluate(model_events)
+                model_matching_events, model_non_matching_events = evaluate(
+                    model_events
+                )
                 best_generation_for_matching_events = (
                     model_matching_events
-                    if len(model_matching_events) > len(best_generation_for_matching_events)
+                    if len(model_matching_events)
+                    > len(best_generation_for_matching_events)
                     else best_generation_for_matching_events
                 )
 
                 best_generation_for_non_matching_events = (
                     model_non_matching_events
-                    if len(model_non_matching_events) > len(best_generation_for_non_matching_events)
+                    if len(model_non_matching_events)
+                    > len(best_generation_for_non_matching_events)
                     else best_generation_for_non_matching_events
                 )
 
@@ -155,8 +172,11 @@ if __name__ == "__main__":
             except Exception as e:
                 log_error(f"[Attempt {attempt + 1}/{MAX_TRIES}] {e}")
 
-        evaluation_results = generate_evaluation_row(model, best_generation_for_matching_events,
-                                                     best_generation_for_non_matching_events)
+        evaluation_results = generate_evaluation_row(
+            model,
+            best_generation_for_matching_events,
+            best_generation_for_non_matching_events,
+        )
         rows.append(evaluation_results)
 
     save_evaluation_results(

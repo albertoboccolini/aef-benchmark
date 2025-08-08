@@ -1,8 +1,8 @@
 import logging
 
-BLUE = '\033[94m'
-RED = '\033[91m'
-RESET = '\033[0m'
+BLUE = "\033[94m"
+RED = "\033[91m"
+RESET = "\033[0m"
 
 
 def log_info(message):

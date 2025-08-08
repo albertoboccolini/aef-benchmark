@@ -15,8 +15,7 @@ open_ai_client = OpenAI(
 )
 
 perplexity_ai_client = OpenAI(
-    api_key=os.environ["PERPLEXITY_API_KEY"],
-    base_url="https://api.perplexity.ai"
+    api_key=os.environ["PERPLEXITY_API_KEY"], base_url="https://api.perplexity.ai"
 )
 
 gemini_ai_client = genai.Client(
@@ -52,7 +51,7 @@ def get_gpt_response(prompt_text: str, search_model: str) -> List[AIEvent]:
         model=search_model,
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt_text}
+            {"role": "user", "content": prompt_text},
         ],
         response_format=EventList,
     )
@@ -66,7 +65,7 @@ def get_perplexity_response(prompt_text: str, search_model: str) -> List[AIEvent
         model=search_model,
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt_text}
+            {"role": "user", "content": prompt_text},
         ],
         response_format=EventList,
     )
