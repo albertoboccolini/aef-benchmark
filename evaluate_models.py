@@ -122,19 +122,41 @@ if __name__ == "__main__":
     ]
     rows = []
 
+    MAX_TRIES = 3
+
     for model in models_to_be_tested:
         model_matching_events = []
         model_non_matching_events = []
-        while len(model_matching_events) == 0:
-            try:
-                model_events = get_perplexity_response(prompt, model) if "sonar" in model else get_gpt_response(prompt,
-                                                                                                                model)
-                model_matching_events, model_non_matching_events = evaluate(model_events)
-            except Exception as e:
-                log_error(str(e))
-                continue
+        best_generation_for_matching_events = []
+        best_generation_for_non_matching_events = []
 
-        evaluation_results = generate_evaluation_row(model, model_matching_events, model_non_matching_events)
+        for attempt in range(MAX_TRIES):
+            try:
+                model_events = (
+                    get_perplexity_response(prompt, model)
+                    if "sonar" in model
+                    else get_gpt_response(prompt, model)
+                )
+                model_matching_events, model_non_matching_events = evaluate(model_events)
+                best_generation_for_matching_events = (
+                    model_matching_events
+                    if len(model_matching_events) > len(best_generation_for_matching_events)
+                    else best_generation_for_matching_events
+                )
+
+                best_generation_for_non_matching_events = (
+                    model_non_matching_events
+                    if len(model_non_matching_events) > len(best_generation_for_non_matching_events)
+                    else best_generation_for_non_matching_events
+                )
+
+                if len(best_generation_for_matching_events) >= 15:
+                    break
+            except Exception as e:
+                log_error(f"[Attempt {attempt + 1}/{MAX_TRIES}] {e}")
+
+        evaluation_results = generate_evaluation_row(model, best_generation_for_matching_events,
+                                                     best_generation_for_non_matching_events)
         rows.append(evaluation_results)
 
     save_evaluation_results(

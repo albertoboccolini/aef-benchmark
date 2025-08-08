@@ -53,7 +53,7 @@ def save_evaluation_results(rows, address, start_date, end_date, distance):
     clean_address = clean_address.replace(' ', '_')
     clean_start_date = start_date.replace('-', '')
     clean_end_date = end_date.replace('-', '')
-    today_date = datetime.now().strftime('%Y%m%d')
+    today_date = datetime.now().strftime('%Y%m%d_%H%M')
 
     filename = f"evaluations/evaluation_{clean_address}_{clean_start_date}_{clean_end_date}_{distance}_{today_date}.csv"
     os.makedirs(os.path.dirname(filename), exist_ok=True)

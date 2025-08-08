@@ -14,9 +14,7 @@ if not csv_files:
     st.warning("No report found in 'evaluations' folder.")
     st.stop()
 
-selected_file = st.selectbox("Select a report", csv_files)
-
-df = pd.read_csv(selected_file)
+csv_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
 
 
 def get_model_color(row):
@@ -42,4 +40,13 @@ def style_table(df):
     return styled_df
 
 
-st.dataframe(style_table(df), use_container_width=True, hide_index=True)
+for csv_file in csv_files:
+    st.text(csv_file.name)
+
+    try:
+        df = pd.read_csv(csv_file)
+        if "Matching events" in df.columns:
+            df = df.sort_values("Matching events", ascending=False)
+        st.dataframe(style_table(df), use_container_width=True, hide_index=True)
+    except Exception as e:
+        st.error(f"Errore nel caricare il file {csv_file.name}: {str(e)}")
