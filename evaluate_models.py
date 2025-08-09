@@ -163,8 +163,8 @@ if __name__ == "__main__":
 
                 best_generation_for_non_matching_events = (
                     model_non_matching_events
-                    if len(model_non_matching_events)
-                    > len(best_generation_for_non_matching_events)
+                    if len(model_matching_events)
+                    > len(best_generation_for_matching_events)
                     else best_generation_for_non_matching_events
                 )
 

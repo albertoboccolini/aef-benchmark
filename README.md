@@ -1,4 +1,4 @@
-# AEF (AI Event Finder) Benchmark
+# AEF (AI Events Finder) Benchmark
 
 This project provides a collection of tools to evaluate various AI models based on their
 ability to identify events within a specific time range and geographic area. The goal is to accurately measure how well
