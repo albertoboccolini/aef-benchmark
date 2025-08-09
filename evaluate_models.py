@@ -130,6 +130,7 @@ if __name__ == "__main__":
     models_to_be_tested = [
         "sonar",
         "sonar-pro",
+        "gpt-5-2025-08-07",
         "gpt-4o-mini-search-preview",
         "gpt-4o-search-preview",
     ]
