@@ -1,0 +1,6 @@
+Model,Matching events,Non Matching events,AVG Matching Score (distance > 2km),AVG Non-Matching Score
+sonar,11,19,2.0,0.211
+sonar-pro,27,3,2.0,1.0
+gpt-5-2025-08-07,17,27,2.0,1.0
+gpt-4o-mini-search-preview,6,2,2.0,1.0
+gpt-4o-search-preview,7,23,2.0,0.913
